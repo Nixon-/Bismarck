@@ -3,7 +3,7 @@ import pyautogui
 from bismarck.command_processor.command_processor import CommandModule
 
 
-class MouseControl(CommandModule):
+class MouseController(CommandModule):
 
     def __init__(self):
         self._position = list(pyautogui.position())

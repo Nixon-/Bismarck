@@ -1,6 +1,7 @@
 import subprocess
 
 from bismarck.command_processor.command_processor import CommandModule
+from bismarck.command_processor.modules.base_io_controls import MouseController
 
 
 class ScreenController(CommandModule):
@@ -9,12 +10,8 @@ class ScreenController(CommandModule):
     WAKE_UP_COMMAND = 'gsettings set org.gnome.desktop.screensaver idle-activation-enabled true'
 
     def wakeup(self):
-        proc = subprocess.Popen(self.WAKE_UP_COMMAND, shell=True)
-        proc.wait()
-
-    def sleep(self):
-        proc = subprocess.Popen(self.SLEEP_COMMAND,  shell=True)
-        proc.wait()
+        mouse = MouseController()
+        mouse.move_mouse_to_absolute(0,0)
 
 
 if __name__ == "__main__":
