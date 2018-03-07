@@ -11,7 +11,13 @@ class ScreenController(CommandModule):
 
     def wakeup(self):
         mouse = MouseController()
-        mouse.move_mouse_to_absolute(0,0)
+        bounds = list(mouse.bounds)
+        pos = mouse.position
+        new_pos = [
+            0 if pos > bounds[0] / 2.0 < 0 else bounds[0],
+            0 if pos > bounds[1] / 2.0 < 0 else bounds[1]
+        ]
+        mouse.move_mouse_to_absolute(*new_pos)
 
 
 if __name__ == "__main__":
