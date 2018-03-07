@@ -19,4 +19,4 @@ if __name__ == "__main__":
     import time
     while True:
         wakeup_screen()
-        time.sleep(65)
+        time.sleep(2)
