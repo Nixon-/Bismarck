@@ -1,0 +1,5 @@
+
+service endpoints:
+  bismarck:
+    hostname: localhost
+    port: 50001
