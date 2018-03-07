@@ -5,8 +5,8 @@ from bismarck.command_processor.command_processor import CommandModule
 
 class ScreenController(CommandModule):
 
-    WAKE_UP_COMMAND = 'gsettings set org.gnome.desktop.screensaver idle-activation-enabled false'
-    SLEEP_COMMAND = 'gsettings set org.gnome.desktop.screensaver idle-activation-enabled true'
+    SLEEP_COMMAND = 'gsettings set org.gnome.desktop.screensaver idle-activation-enabled false'
+    WAKE_UP_COMMAND = 'gsettings set org.gnome.desktop.screensaver idle-activation-enabled true'
 
     def wakeup(self):
         proc = subprocess.Popen(self.WAKE_UP_COMMAND, shell=True)
