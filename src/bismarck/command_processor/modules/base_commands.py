@@ -14,8 +14,8 @@ class ScreenController(CommandModule):
         bounds = list(mouse.bounds)
         pos = mouse.position
         new_pos = [
-            0 if pos > bounds[0] / 2.0 < 0 else bounds[0],
-            0 if pos > bounds[1] / 2.0 < 0 else bounds[1]
+            0 if pos[0] > bounds[0] / 2.0 < 0 else bounds[0],
+            0 if pos[1] > bounds[1] / 2.0 < 0 else bounds[1]
         ]
         mouse.move_mouse_to_absolute(*new_pos)
 
