@@ -1,5 +1,3 @@
-import subprocess
-
 from bismarck.command_processor.command_processor import CommandModule
 from bismarck.command_processor.modules.base_io_controls import MouseController
 
