@@ -1,20 +1,27 @@
 import subprocess
 
-
-def wakeup_screen():
-    proc = subprocess.Popen('gsettings set org.gnome.desktop.screensaver idle-activation-enabled false', shell=True)
-    proc.wait()
+from bismarck.command_processor.command_processor import CommandModule
 
 
-def sleep_screen():
-    proc = subprocess.Popen('gsettings set org.gnome.desktop.screensaver idle-activation-enabled true', shell=True)
-    proc.wait()
+class ScreenController(CommandModule):
+
+    WAKE_UP_COMMAND = 'gsettings set org.gnome.desktop.screensaver idle-activation-enabled false'
+    SLEEP_COMMAND = 'gsettings set org.gnome.desktop.screensaver idle-activation-enabled true'
+
+    def wakeup(self):
+        proc = subprocess.Popen(self.WAKE_UP_COMMAND, shell=True)
+        proc.wait()
+
+    def sleep(self):
+        proc = subprocess.Popen(self.SLEEP_COMMAND,  shell=True)
+        proc.wait()
 
 
 if __name__ == "__main__":
     import time
+    screen = ScreenController()
     while True:
-        wakeup_screen()
-        time.sleep(10)
-        sleep_screen()
-        time.sleep(10)
+        screen.sleep()
+        time.sleep(30)
+        screen.wakeup()
+        time.sleep(30)
