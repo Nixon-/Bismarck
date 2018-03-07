@@ -18,7 +18,5 @@ if __name__ == "__main__":
     import time
     screen = ScreenController()
     while True:
-        screen.sleep()
-        time.sleep(30)
         screen.wakeup()
         time.sleep(30)
