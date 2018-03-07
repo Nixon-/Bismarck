@@ -29,6 +29,7 @@ class MouseControl(CommandModule):
         self._move()
 
     def _move(self):
-        for i in range(len(self.position)):
-            self._position[i] = sorted((0, self.position[i], self.bounds[i]))[1]
-        pyautogui.moveTo(self.position)
+        for i in range(len(self._position)):
+            self._position[i] = sorted((0, self._position[i], self.bounds[i]))[1]
+        pyautogui.moveTo(self._position)
+        print(pyautogui.position())
