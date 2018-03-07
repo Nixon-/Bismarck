@@ -11,13 +11,10 @@ class MouseControl(CommandModule):
 
     def move_mouse_from_current(self, x, y):
         self._position = list(pyautogui.position())
-        self.position[0] += x
-        self.position[1] += y
-        self._move()
+        self.position = (self._position[0] + x, self._position[1] + y)
 
     def move_mouse_to_absolute(self, x, y):
         self.position = (x, y)
-        self._move()
 
     @property
     def position(self):
