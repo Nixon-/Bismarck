@@ -10,7 +10,7 @@ def wakeup_screen():
         jitter_mouse = (1, 1)
     else:
         x = -1 if current_position[0] < bounds[0] else 1
-        y = -1 if current_position[1] < bounds[1] else 1
+        y = 1 if current_position[1] < bounds[1] else -1
         jitter_mouse = (x, y)
     mouse.move_mouse_from_current(*jitter_mouse)
 
