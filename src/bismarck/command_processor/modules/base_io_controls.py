@@ -6,7 +6,7 @@ from bismarck.command_processor.command_processor import CommandModule
 class MouseControl(CommandModule):
 
     def __init__(self):
-        self.position = list(pyautogui.position())
+        self._position = list(pyautogui.position())
         self.bounds = pyautogui.size()
 
     def move_mouse_from_current(self, x, y):
@@ -15,7 +15,16 @@ class MouseControl(CommandModule):
         self._move()
 
     def move_mouse_to_absolute(self, x, y):
-        self.position[0] = (x, y)
+        self.position = (x, y)
+        self._move()
+
+    @property
+    def position(self):
+        return tuple(self._position)
+
+    @position.setter
+    def position(self, position):
+        self._position = tuple(position)
         self._move()
 
     def _move(self):
