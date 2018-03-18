@@ -1,5 +1,5 @@
 import jinja2
-from flask import Flask
+from flask import Flask, request
 import os
 
 
@@ -35,5 +35,6 @@ class FlaskHost(SimpleHost):
     def add_endpoint(self, name, func_name, func, methods=('GET', 'POST')):
         if name[0] != '/':
             name = '/' + name
-        self.app.add_url_rule(name, endpoint=func_name, view_func=lambda *wargs, **kwargs: func(wargs, kwargs),
+        self.app.add_url_rule(name, endpoint=func_name,
+                              view_func=lambda *wargs, **kwargs: func(dict(request.args), wargs, kwargs),
                               methods=methods)

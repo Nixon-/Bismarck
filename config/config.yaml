@@ -2,4 +2,11 @@
 service endpoints:
   bismarck:
     hostname: localhost
-    port: 50001
+    port: 5000
+
+  coordinator:
+    hostname: localhost
+    port: 50100
+  semantic_analysis:
+    hostname: localhost
+    port: 50101

@@ -1,3 +1,4 @@
+import json
 from abc import ABC, abstractmethod
 from bismarck.service.host import FlaskHost
 from bismarck.utils import config_helper
@@ -25,3 +26,7 @@ class HostedService(Service):
     @abstractmethod
     def start(self):
         super().start()
+
+
+def get_response_for(code):
+    return json.dumps({'status_code': code})
