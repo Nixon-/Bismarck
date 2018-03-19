@@ -3,7 +3,8 @@ from queue import Queue, Empty
 
 from multiprocessing import Process
 
-from bismarck.command_processor.disambiguation.disambiguate import SemanticAnalyzer
+from bismarck.disambiguation import SemanticAnalyzer
+from bismarck.entities.Action import ComplexAction
 from bismarck.service.requests import api_get
 from bismarck.service.service import HostedService, get_response_for
 from http import HTTPStatus
@@ -80,13 +81,21 @@ class Worker:
     def start(self):
         while not self.die:
             try:
-                action = self.command_queue.get(block=True, timeout=15)
-                if action['name'] == self.termination_code:
+                action_dict = self.command_queue.get(block=True, timeout=15)
+                if action_dict['name'] == self.termination_code:
                     self.die = True
                     break
-                module_service_name = api_get(SemanticAnalyzer.service_name, 'get_module_for_action', action['name'])
-                api_get(module_service_name, 'do_action', action)
+                chain = self.get_complex_action(action_dict)
+                for action in chain.next_action():
+                    self.do_next_action(action)
             except Empty:
                 pass
             except urllib.error.URLError:
                 pass
+
+    def do_next_action(self, action):
+        module_service_name = api_get(SemanticAnalyzer.service_name, 'get_module_for_action', action['name'])
+        api_get(module_service_name, 'do_action', action)
+
+    def get_complex_action(self, action_dict):
+        return ComplexAction()

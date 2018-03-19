@@ -1,6 +1,6 @@
 from multiprocessing import Process
 
-from bismarck.command_processor.disambiguation.disambiguate import SemanticAnalyzer
+from bismarck.disambiguation import SemanticAnalyzer
 from bismarck.command_processor.service import CommandApi, Coordinator
 
 
