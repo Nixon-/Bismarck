@@ -1,4 +1,4 @@
-from bismarck.command_processor.modules.base_io_controls import MouseController
+from bismarck.command_processor.modules.io.base_io_controls import MouseController
 
 
 class Display:
