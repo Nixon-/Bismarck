@@ -1,22 +1,32 @@
-from bismarck.command_processor.command_processor import CommandModule
-from selenium import webdriver
+from http import HTTPStatus
+
+from bismarck.command_processor.modules.applications.chrome_commands import ChromeController
+from bismarck.service.service import HostedService, get_response_for
 
 
-class ChromeController(CommandModule):
+class ChromeService(HostedService):
 
-    _browser_path = "../utils/chromedriver"
+    service_name = "chrome_service"
+    open_browser_request = 'open_browser'
+    go_to_url_request = 'go_to_url'
 
     def __init__(self):
-        super().__init__()
-        self.driver = None
-        self.current_page = None
+        super().__init__(self.service_name)
+        self.controller = ChromeController()
 
-    def open_browser(self):
-        self.driver = webdriver.Chrome(executable_path=self._browser_path)
+    def start(self):
+        self.host.add_endpoint(self.open_browser_request, self.open_browser_request, self.open_browser)
+        self.host.add_endpoint(self.go_to_url_request, self.go_to_url_request, self.go_to_url)
+        self.host.start()
 
-    def go_to_address(self, url):
-        self.current_page = self.driver.get(url)
+    def open_browser(self, url_args, *args, **kwargs):
+        try:
+            self.controller.open_browser()
+        except ValueError:
+            pass
+        return get_response_for(HTTPStatus.OK)
 
-
-if __name__ == "__main__":
-    controller = ChromeController()
+    def go_to_url(self, url_args, *args, **kwargs):
+        url = url_args['url'][0]
+        self.controller.go_to_address(url)
+        return get_response_for(HTTPStatus.OK)

@@ -1,10 +1,12 @@
 import urllib.error
-from queue import Queue, Empty
+from queue import Empty
 
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 
-from bismarck.disambiguation import SemanticAnalyzer
-from bismarck.entities.Action import ComplexAction
+from bismarck.disambiguation.disambiguate import SemanticAnalyzer
+from bismarck.entities.action import ActionChain
+from bismarck.entities.actions.actions import get_action
+from bismarck.entities.complex_action import get_complex_action
 from bismarck.service.requests import api_get
 from bismarck.service.service import HostedService, get_response_for
 from http import HTTPStatus
@@ -27,6 +29,8 @@ class CommandApi(HostedService):
     @staticmethod
     def do_action(url_args, *args, **kwargs):
         try:
+            for key in url_args.keys():
+                url_args[key] = url_args[key][0]
             api_get(Coordinator.service_name, 'new_command', url_args)
             return get_response_for(HTTPStatus.OK)
         except urllib.error.URLError:
@@ -51,8 +55,11 @@ class Coordinator(HostedService):
         self._stop_workers()
 
     def _start_workers(self):
+        def start_worker(action_queue, termination_code):
+            Worker(action_queue=action_queue, termination_code=termination_code).start()
+
         for i in range(self.num_workers):
-            self.workers.append(Process(target=Worker.__init__, args=(self.action_queue, True, )))
+            self.workers.append(Process(target=start_worker, args=(self.action_queue, None)))
         for proc in self.workers:
             proc.start()
 
@@ -70,32 +77,30 @@ class Worker:
 
     termination_code = '__terminate'
 
-    def __init__(self, action_queue, auto_start=False, termination_code=None):
+    def __init__(self, action_queue, termination_code=None):
         if termination_code is not None:
             self.termination_code = termination_code
         self.die = False
         self.command_queue = action_queue
-        if auto_start:
-            self.start()
 
     def start(self):
         while not self.die:
             try:
-                action_dict = self.command_queue.get(block=True, timeout=15)
-                if action_dict['name'] == self.termination_code:
+                action_dict = self.command_queue.get(block=True, timeout=5)
+                for key in action_dict.keys():
+                    action_dict[key] = action_dict[key][0]
+                if action_dict['action_name'] == self.termination_code:
                     self.die = True
                     break
-                chain = self.get_complex_action(action_dict)
-                for action in chain.next_action():
-                    self.do_next_action(action)
+                action_chain = self.get_complex_action(action_dict)
+                action_chain.execute()
             except Empty:
                 pass
             except urllib.error.URLError:
                 pass
 
-    def do_next_action(self, action):
-        module_service_name = api_get(SemanticAnalyzer.service_name, 'get_module_for_action', action['name'])
-        api_get(module_service_name, 'do_action', action)
-
     def get_complex_action(self, action_dict):
-        return ComplexAction()
+        action = get_complex_action(action_dict['application'].lower())
+        if action is None:
+            action = get_action(action_dict['application'])
+        return action

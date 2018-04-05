@@ -3,10 +3,15 @@ service endpoints:
   bismarck:
     hostname: localhost
     port: 5000
-
   coordinator:
     hostname: localhost
     port: 50100
   semantic_analysis:
     hostname: localhost
     port: 50101
+  io_service:
+    hostname: localhost
+    port: 50102
+  chrome_service:
+    hostname: localhost
+    port: 50103
