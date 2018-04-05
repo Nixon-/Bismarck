@@ -22,6 +22,28 @@ class GoToUrlAction(Action):
         api_get(ChromeService.service_name, ChromeService.go_to_url_request, args={'url': self.url})
 
 
+class EnterDataAction(Action):
+
+    def __init__(self, where, text):
+        super().__init__(name='', url='', params='')
+        self.where = where
+        self.text = text
+
+    def execute(self):
+        api_get(ChromeService.service_name, ChromeService.enter_text_request,
+                args={'where': self.where, 'text': self.text})
+
+
+class FormSubmitAction(Action):
+
+    def __init__(self, where):
+        super().__init__(name='', url='', params='')
+        self.where = where
+
+    def execute(self):
+        api_get(ChromeService.service_name, ChromeService.submit_request, args={'where': self.where})
+
+
 class MoveMouseAction(Action):
 
     def __init__(self):
