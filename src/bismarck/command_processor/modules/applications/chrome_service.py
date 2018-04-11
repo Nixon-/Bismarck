@@ -12,9 +12,9 @@ class ChromeService(HostedService):
     enter_text_request = 'enter_text'
     submit_request = 'submit'
 
-    def __init__(self):
+    def __init__(self, secret_handler):
         super().__init__(self.service_name)
-        self.controller = ChromeController()
+        self.controller = ChromeController(secret_handler)
 
     def start(self):
         self.host.add_endpoint(self.open_browser_request, self.open_browser_request, self.open_browser)
