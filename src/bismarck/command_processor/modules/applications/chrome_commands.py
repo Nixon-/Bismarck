@@ -17,7 +17,7 @@ class ChromeController(CommandModule):
     def open_browser(self):
         options = webdriver.ChromeOptions()
         options.add_argument("--start-maximized")
-        self.driver = webdriver.Chrome(chrome_options=options, executable_path=self._browser_path)
+        self.driver = webdriver.Chrome(chrome_options=options) #, executable_path=self._browser_path)
 
     def go_to_address(self, url):
         self.current_page = self.driver.get(url)
